@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -6,11 +8,13 @@ import 'package:skyle_clone/generated/l10n.dart';
 import 'package:skyle_clone/services/app/app_dialog.dart';
 import 'package:skyle_clone/services/app/app_loading.dart';
 import 'package:skyle_clone/services/app/auth_provider.dart';
+import 'package:skyle_clone/services/app/chat_provider.dart';
 import 'package:skyle_clone/services/app/locale_provider.dart';
 import 'package:skyle_clone/services/cache/cache.dart';
-import 'package:skyle_clone/services/cache/cache_preferences.dart';
-import 'package:skyle_clone/services/cache/credential.dart';
-import 'package:skyle_clone/services/rest_api/api_user.dart';
+
+import 'package:skyle_clone/services/my_rest_api/api_user.dart';
+import 'package:skyle_clone/services/my_rest_api/chat_api.dart';
+
 import 'package:skyle_clone/utils/app_extension.dart';
 import 'package:skyle_clone/utils/app_route.dart';
 import 'package:skyle_clone/utils/app_theme.dart';
@@ -24,30 +28,39 @@ Future<void> myMain() async {
   /// Force portrait mode
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
 
+  await Firebase.initializeApp();
   /// Run Application
   runApp(
     MultiProvider(
       providers: <SingleChildWidget>[
         Provider<AppRoute>(create: (_) => AppRoute()),
-        Provider<Cache>(create: (_) => CachePreferences()),
-        ChangeNotifierProvider<Credential>(
-            create: (BuildContext context) => Credential(
-                  Provider.of(context, listen: false),
-                )),
-        ProxyProvider<Credential, ApiUser>(
-            create: (_) => ApiUser(),
-            update: (_, Credential credential, ApiUser userApi) {
-              return userApi..token = credential.token;
-            }),
+        // Provider<Cache>(create: (_) => CachePreferences()),
+
+
+        // ChangeNotifierProvider<Credential>(
+        //     create: (BuildContext context) => Credential(
+        //           Provider.of(context, listen: false),
+        //         )),
+        // ProxyProvider<Credential, ApiUser>(
+        //     create: (_) => ApiUser(),
+        //     update: (_, Credential credential, ApiUser userApi) {
+        //       return userApi..token = credential.token;
+        //     }),
         Provider<AppLoading>(create: (_) => AppLoading()),
         Provider<AppDialog>(create: (_) => AppDialog()),
-        ChangeNotifierProvider<LocaleProvider>(create: (BuildContext context) => LocaleProvider()),
+        ChangeNotifierProvider<LocaleProvider>(
+            create: (BuildContext context) => LocaleProvider()),
         ChangeNotifierProvider<AppThemeProvider>(create: (BuildContext context) => AppThemeProvider()),
         ChangeNotifierProvider<AuthProvider>(
             create: (BuildContext context) => AuthProvider(
-                  Provider.of(context, listen: false),
-                  Provider.of(context, listen: false),
+
+
                 )),
+        ChangeNotifierProvider<ChatProvider>(
+            create: (BuildContext context) => ChatProvider(
+
+
+            )),
       ],
       child: const MyApp(),
     ),
@@ -68,10 +81,18 @@ class _MyAppState extends State<MyApp> {
 
     /// Init page
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final bool hasCredential = await context.read<Credential>().loadCredential();
-      if (hasCredential) {
-        context.navigator().pushReplacementNamed(AppRoute.routeHome);
-      }
+      Future.delayed(const Duration(milliseconds: 100), () {
+
+// Here you can write your code
+
+        final User currentUser =  context.read<AuthProvider>().getCurrentUser();
+        if (currentUser!=null ) {
+          context.navigator().pushReplacementNamed(AppRoute.routeHome);
+
+        }
+
+      });
+
     });
   }
 
@@ -134,27 +155,6 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
-    // return MaterialApp(
-    //   navigatorKey: appRoute.navigatorKey,
-    //   locale: localeProvider.locale,
-    //   supportedLocales: S.delegate.supportedLocales,
-    //   localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-    //     S.delegate,
-    //     GlobalMaterialLocalizations.delegate,
-    //     GlobalCupertinoLocalizations.delegate,
-    //     GlobalWidgetsLocalizations.delegate,
-    //   ],
-    //   debugShowCheckedModeBanner: false,
-    //   theme: appTheme.buildThemeData(),
-    //   //https://stackoverflow.com/questions/57245175/flutter-dynamic-initial-route
-    //   //https://github.com/flutter/flutter/issues/12454
-    //   //home: (appRoute.generateRoute(
-    //   ///            const RouteSettings(name: AppRoute.rootPageRoute))
-    //   ///        as MaterialPageRoute<dynamic>)
-    //   ///    .builder(context),
-    //   initialRoute: AppRoute.routeRoot,
-    //   onGenerateRoute: appRoute.generateRoute,
-    //   navigatorObservers: <NavigatorObserver>[appRoute.routeObserver],
-    // );
+
   }
 }

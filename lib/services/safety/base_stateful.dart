@@ -14,15 +14,15 @@ abstract class BaseStateful<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
-  void afterFirstBuild(BuildContext context) {}
+  Future<void> afterFirstBuild(BuildContext context) async{}
 
   @mustCallSuper
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
       if (mounted) {
-        afterFirstBuild(context);
+        await afterFirstBuild(context);
       }
     });
   }

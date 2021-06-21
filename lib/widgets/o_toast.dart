@@ -75,7 +75,7 @@ class _ToastContainerState extends BaseStateful<_ToastContainer> {
   double top;
 
   @override
-  void afterFirstBuild(BuildContext context) {
+  Future<void> afterFirstBuild(BuildContext context) async{
     super.afterFirstBuild(context);
     setState(() {
       top = 1.SH / 2 - context.size.height / 2;

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "812473584481",
+    "project_id": "skyle-clone-87034",
+    "storage_bucket": "skyle-clone-87034.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812473584481:android:4c3da1247ea4883c4dd320",
+        "android_client_info": {
+          "package_name": "com.tronglv.skyle_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812473584481-eftuvlhitlrgttr6gpdms6feos5djrkr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tronglv.skyle_clone",
+            "certificate_hash": "2b62ff2e7b9e063934d1f9d9041ad0c12044ff41"
+          }
+        },
+        {
+          "client_id": "812473584481-00od0m5j3419e5342h9pjmejt3jhlgi2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD4DPaYsB4bUZpOsRUEEeuURnghpdgNeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812473584481-00od0m5j3419e5342h9pjmejt3jhlgi2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

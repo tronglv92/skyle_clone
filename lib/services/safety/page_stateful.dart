@@ -38,7 +38,7 @@ abstract class PageStateful<T extends StatefulWidget> extends BaseStateful<T> wi
   /// Logout function
   Future<void> logout(BuildContext context) async {
     await apiCallSafety(
-      authProvider.logout,
+      authProvider.logOut,
       onStart: () async {
         AppLoading.show(context);
       },

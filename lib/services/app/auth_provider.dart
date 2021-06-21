@@ -1,57 +1,72 @@
-import 'package:dio/dio.dart';
-import 'package:skyle_clone/models/local/token.dart';
-import 'package:skyle_clone/models/remote/login_response.dart';
-import 'package:skyle_clone/services/cache/credential.dart';
-import 'package:skyle_clone/services/rest_api/api_user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:skyle_clone/models/local/db_user.dart';
+
+import 'package:skyle_clone/services/my_rest_api/api_user.dart';
+
 import 'package:skyle_clone/services/safety/change_notifier_safety.dart';
+import 'package:skyle_clone/utils/app_log.dart';
 
 class AuthProvider extends ChangeNotifierSafety {
-  AuthProvider(this._api, this._credential);
+  AuthProvider(){
+    logger.e("AuthProvider create");
+    this._api=ApiUser();
+  }
 
   /// Authentication api
-  final ApiUser _api;
+   ApiUser _api;
 
-  /// Credential
-  final Credential _credential;
+  DBUser _user;
+
+  DBUser get user => _user;
+
+  set user(DBUser user) {
+    _user = user;
+    logger.d("vao trong nay 1");
+    notifyListeners();
+
+  }
+
+  // /// Credential
+  // final Credential _credential;
 
   @override
   void resetState() {}
 
-  /// Call api login
-  Future<bool> login(String email, String password) async {
-    final Response<Map<String, dynamic>> result =
-        await _api.logIn(email, password).timeout(const Duration(seconds: 30));
-    final LoginResponse loginResponse = LoginResponse(result.data);
-    final Token token = loginResponse.data;
-    if (token != null) {
-      /// Save credential
-      final bool saveRes = await _credential.storeCredential(token, cache: true);
-      return saveRes;
-    } else {
-      throw DioError(
-          requestOptions: null, error: loginResponse.error?.message ?? 'Login error', type: DioErrorType.response);
-    }
+  Future<void> refreshUser() async {
+    DBUser dbUser = await _api.getUserDetails();
+    _user = dbUser;
+    logger.d("vao trong nay 2");
+    notifyListeners();
   }
 
-  /// Call api login with error
-  Future<LoginResponse> logInWithError() async {
-    final Response<Map<String, dynamic>> result = await _api.logInWithError().timeout(const Duration(seconds: 30));
-    final LoginResponse loginResponse = LoginResponse(result.data);
-    return loginResponse;
+  User getCurrentUser() {
+    return _api.getCurrentUser();
   }
 
-  /// Call api login with exception
-  Future<void> logInWithException() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
-    throw DioError(requestOptions: null, error: 'Login with exception', type: DioErrorType.response);
+  Future<User> loginByGoogle() {
+    return _api.loginByGoogle();
   }
 
-  /// Call logout
-  Future<bool> logout() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
+  Future<bool> logOut() {
+    return _api.logOut();
+  }
 
-    /// Save credential
-    final bool saveRes = await _credential.storeCredential(null, cache: true);
-    return saveRes;
+  Future<bool> userExits(User user) {
+    return _api.userExits(user);
+  }
+
+  Future<void> addUserToFirebaseDb(User currentUser) {
+    return _api.addUserToFirebaseDb(currentUser);
+  }
+
+  Future<DBUser> getUserDetails() {
+    return _api.getUserDetails();
+  }
+
+  Future<List<DBUser>> fetchAllUsers(DBUser currentUser){
+    return _api.fetchAllUsers(currentUser);
+  }
+  Future<DBUser> getUserDetailsById(id)  {
+    return _api.getUserDetailsById(id);
   }
 }

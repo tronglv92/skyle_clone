@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:skyle_clone/models/local/db_user.dart';
+import 'package:skyle_clone/pages/chat/chat_page.dart';
 import 'package:skyle_clone/pages/counter/counter_page.dart';
 import 'package:skyle_clone/pages/counter/counter_provider.dart';
 import 'package:skyle_clone/pages/home/home_page.dart';
 import 'package:skyle_clone/pages/home/home_provider.dart';
+import 'package:skyle_clone/pages/home/pageviews/chat_list/pick_file_example.dart';
+import 'package:skyle_clone/pages/home/search/search_page.dart';
 import 'package:skyle_clone/pages/login/login_page.dart';
 import 'package:skyle_clone/pages/login/login_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +23,8 @@ class AppRoute {
   static const String routeHome = '/home';
   static const String routeLogin = '/login';
   static const String routeCounter = '/counter';
-
+  static const String routeSearch = '/search';
+  static const String routeChat='/chat';
   ///#endregion
 
   static final AppRoute _instance = AppRoute._private();
@@ -91,11 +96,18 @@ class AppRoute {
         return MaterialPageRoute<dynamic>(
             settings: settings,
             builder: (_) => AppRoute.createProvider(
-                  (BuildContext context) => HomeProvider(Provider.of(context, listen: false)),
+                  (BuildContext context) => HomeProvider(),
                   const HomePage(),
                 ));
 
       case routeRoot:
+        return MaterialPageRoute<dynamic>(
+          settings: settings,
+          builder: (_) {
+
+            return  FilePickerDemo();
+          },
+        );
       case routeLogin:
         return MaterialPageRoute<dynamic>(
             settings: settings,
@@ -103,7 +115,19 @@ class AppRoute {
                   (_) => LoginProvider(),
                   const LoginPage(),
                 ));
-
+      case routeSearch:
+        return MaterialPageRoute<dynamic>(
+            settings: settings,
+            builder: (_) => SearchPage(),
+            );
+      case routeChat:
+        return MaterialPageRoute<dynamic>(
+          settings: settings,
+          builder: (_) {
+            DBUser receiver= settings.arguments;
+            return  ChatPage(receiver: receiver,);
+          },
+        );
       default:
         return null;
     }

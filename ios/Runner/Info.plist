@@ -41,5 +41,25 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Pick image</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Pick image from camera</string>
+	<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+    <!-- Google Sign-in Section -->
+    <key>CFBundleURLTypes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleTypeRole</key>
+    		<string>Editor</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+    			<!-- TODO Replace this value: -->
+    			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+    			<string>com.googleusercontent.apps.812473584481-ssrtp6n2fdf5duvd3n1tag4auhkoafgu</string>
+    		</array>
+    	</dict>
+    </array>
+    <!-- End of the Google Sign-in Section -->
 </dict>
 </plist>

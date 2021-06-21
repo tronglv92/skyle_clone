@@ -30,7 +30,10 @@ extension AppRouteExt on BuildContext {
   }
 
   NavigatorState navigator() {
-    return route().navigatorKey.currentState;
+
+
+    NavigatorState state= route().navigatorKey.currentState;
+    return state;
   }
 
   S get strings => S.of(this);
